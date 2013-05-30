@@ -1,7 +1,7 @@
 # Overview
 This repository contains everything needed to build RPM's for zookeeper, including libzookeeper and the devel packages. Different pieces are taken from places around the internet; the init script is quite close to Cassandra's. Individual packages will be built for zookeeper, libzookeeper, and zookeeper-devel.
 
-The spec has been tested only on EL6 with the EPEL repo enabled, but should also work on recent Fedoras (probably 15+) and SLE.
+The spec has been tested only on EL6 with the EPEL repo enabled, but should also work on recent Fedoras, too.
 
 # Building
 1. `git clone https://github.com/skottler/zookeeper-rpms`
