@@ -1,5 +1,5 @@
 %define _noarch_libdir /usr/lib 
-%define rel_ver 3.3.2
+%define rel_ver 3.4.5
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
@@ -8,14 +8,14 @@ Release: 1
 License: Apache License v2.0
 Group: Applications/Databases
 URL: http://hadoop.apache.org/zookeeper/
-Source0: http://archive.apache.org/dist/hadoop/zookeeper/zookeeper-%{rel_ver}/zookeeper-%{rel_ver}.tar.gz
+Source0: http://mirror.cogentco.com/pub/apache/zookeeper/zookeeper-%{rel_ver}/zookeeper-%{rel_ver}.tar.gz
 Source1: zookeeper.init
 Source2: zookeeper.logrotate
 Source3: zoo.cfg
 Source4: log4j.properties
 Source5: java.env
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
-BuildRequires: python-devel,gcc,make,libtool,autoconf,cxxtest
+BuildRequires: python-devel,gcc,make,libtool,autoconf,cxxtest,cppunit-devel,cppunit
 Requires: logrotate, java
 Requires(post): chkconfig initscripts
 Requires(pre): chkconfig initscripts
@@ -48,7 +48,6 @@ rm -rf aclocal.m4 autom4te.cache/ config.guess config.status config.log \
     Makefile Makefile.in missing stamp-h1 compile
 autoheader
 libtoolize --force
-sed -i '24,34d' configure.ac
 aclocal
 automake -a
 autoconf
@@ -78,8 +77,6 @@ install -d %{buildroot}%{_localstatedir}/lib/zookeeper/data
 install -p -d -D -m 0755 %{buildroot}%{_datadir}/zookeeper
 
 %{makeinstall} -C src/c
-
-mv %{buildroot}%{_includedir}/c-client-src %{buildroot}%{_includedir}/zookeeper
 
 %clean
 rm -rf %{buildroot}
@@ -160,5 +157,7 @@ if [ "$1" -ge "1" ] ; then
 fi
 
 %changelog
+* Thu May 30 2013 Sam Kottler <shk@linux.com> - 3.4.5-1
+- Updated to 3.4.5
 * Tue Oct 2 2012 Sam Kottler <sam@kottlerdevelopment.com> - 3.3.2-1
 - Initialize package creation
