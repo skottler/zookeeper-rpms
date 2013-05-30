@@ -9,7 +9,4 @@ The spec has been tested only on EL6 with the EPEL repo enabled, but should also
 3. `rpmdev-setuptree`
 4. `spectool -g zookeeper.spec`
 5. `rpmbuild -bs --nodeps --define "_sourcedir ." --define "_srcrpmdir ." zookeeper.spec` 
-6. `sudo mock zookeeper-`cat zookeeper.spec | grep "%define rel_ver" | awk '{ print $3 }'`-`cat zookeeper.spec | grep Release | awk '{ print $2 }'`.src.rpm`
-
-# Notes
-There is some `sed` trickery in zookeeper.spec's %build section. This is because the default `configure.ac` requires cppunit. This is a dumb requirement for building for several reasons, not the least of which is that cppunit is not available via any of the mainstream "extras" repos.
+6. `sudo mock <the srpm from step 5>`
