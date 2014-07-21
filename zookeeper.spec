@@ -15,7 +15,7 @@ Source3: zoo.cfg
 Source4: log4j.properties
 Source5: java.env
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
-BuildRequires: python-devel,gcc,make,libtool,autoconf,cxxtest,cppunit-devel,cppunit
+BuildRequires: python-devel,gcc,make,libtool,autoconf,cppunit-devel
 Requires: logrotate, java, nc
 Requires(post): chkconfig initscripts
 Requires(pre): chkconfig initscripts
