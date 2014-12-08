@@ -157,7 +157,7 @@ if [ "$1" -ge "1" ] ; then
 fi
 
 %changelog
-* Mon Dec 8 2014 David Xie <david.scriptfan@gmail.com> - 3.4.6
+* Mon Dec 8 2014 David Xie <david.scriptfan@gmail.com> - 3.4.6-1
 - Bump version to 3.4.6
 * Thu May 30 2013 Sam Kottler <shk@linux.com> - 3.4.5-1
 - Updated to 3.4.5
