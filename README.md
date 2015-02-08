@@ -10,3 +10,8 @@ The spec has been tested only on EL6 with the EPEL repo enabled, but should also
 4. `spectool -g zookeeper.spec`
 5. `rpmbuild -bs --nodeps --define "_sourcedir ." --define "_srcrpmdir ." zookeeper.spec` 
 6. `sudo mock <the srpm from step 5>`
+
+# License
+All files in this repository are licensed under the Apache 2 license. Any
+redistribution of these files must include the original license as well as
+attribution to this repository.
