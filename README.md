@@ -8,7 +8,7 @@ The spec has been tested only on EL6 with the EPEL repo enabled, but should also
 2. `cd zookeeper-rpms`
 3. `rpmdev-setuptree`
 4. `spectool -g zookeeper.spec`
-5. `rpmbuild -bs --nodeps --define "_sourcedir ." --define "_srcrpmdir ." zookeeper.spec` 
+5. `rpmbuild -bs --nodeps --define "_sourcedir $(pwd)" --define "_srcrpmdir $(pwd)" zookeeper.spec` 
 6. `sudo mock <the srpm from step 5>`
 
 # License
