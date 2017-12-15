@@ -1,5 +1,5 @@
 %define _noarch_libdir /usr/lib
-%define rel_ver 3.4.10
+%define rel_ver 3.4.11
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
@@ -83,7 +83,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE.txt NOTICE.txt README.txt
+%doc LICENSE.txt NOTICE.txt README.md
 %doc docs recipes
 %dir %attr(0750, zookeeper, zookeeper) %{_localstatedir}/lib/zookeeper
 %dir %attr(0750, zookeeper, zookeeper) %{_localstatedir}/lib/zookeeper/data
