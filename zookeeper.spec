@@ -1,5 +1,5 @@
 %define _noarch_libdir /usr/lib
-%define rel_ver 3.4.11
+%define rel_ver 3.4.14
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
@@ -42,7 +42,7 @@ implementing coordination services from scratch.
 %setup -q -n zookeeper-%{rel_ver}
 
 %build
-pushd src/c
+pushd zookeeper-client/zookeeper-client-c
 rm -rf aclocal.m4 autom4te.cache/ config.guess config.status config.log \
     config.sub configure depcomp install-sh ltmain.sh libtool \
     Makefile Makefile.in missing stamp-h1 compile
@@ -76,7 +76,7 @@ install -d %{buildroot}%{_localstatedir}/lib/zookeeper
 install -d %{buildroot}%{_localstatedir}/lib/zookeeper/data
 install -p -d -D -m 0755 %{buildroot}%{_datadir}/zookeeper
 
-%{makeinstall} -C src/c
+%{makeinstall} -C zookeeper-client/zookeeper-client-c
 
 %clean
 rm -rf %{buildroot}
@@ -84,7 +84,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc LICENSE.txt NOTICE.txt README.md
-%doc docs recipes
+%doc zookeeper-docs zookeeper-recipes
 %dir %attr(0750, zookeeper, zookeeper) %{_localstatedir}/lib/zookeeper
 %dir %attr(0750, zookeeper, zookeeper) %{_localstatedir}/lib/zookeeper/data
 %dir %attr(0750, zookeeper, zookeeper) %{_localstatedir}/log/zookeeper
@@ -116,7 +116,7 @@ Sync and Async APIs can be mixed and matched within the same application.
 
 %files -n libzookeeper
 %defattr(-, root, root, -)
-%doc src/c/README src/c/LICENSE
+%doc zookeeper-client/zookeeper-client-c/README zookeeper-client/zookeeper-client-c/LICENSE
 %{_libdir}/libzookeeper_mt.so.*
 %{_libdir}/libzookeeper_st.so.*
 
@@ -158,6 +158,8 @@ if [ "$1" -ge "1" ] ; then
 fi
 
 %changelog
+* Thu May 02 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.4.14-1
+- Bump version to 3.4.14
 * Mon Apr 17 2017 itxx00 <itxx00@gmail.com> - 3.4.10-1
 - Bump version to 3.4.10
 * Mon Mar 13 2017 itxx00 <itxx00@gmail.com> - 3.4.9-1
