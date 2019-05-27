@@ -1,0 +1,26 @@
+[Unit]
+Description=Apache Zookeeper server
+Documentation=http://zookeeper.apache.org
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+SyslogIdentifier=zookeeper
+User=zookeeper
+Group=zookeeper
+WorkingDirectory=/var/lib/zookeeper
+
+ExecStart=/usr/bin/java \
+  -Dzookeeper.log.dir=/var/log/zookeeper \
+  -Dlog4j.configuration=file:/etc/zookeeper/log4j.properties \
+  -cp /usr/lib/zookeeper/lib/* \
+  org.apache.zookeeper.server.quorum.QuorumPeerMain \
+  /etc/zookeeper/zoo.cfg
+
+StandardOutput=journal
+StandardError=journal
+SuccessExitStatus=130
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
