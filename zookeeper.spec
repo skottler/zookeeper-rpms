@@ -13,7 +13,6 @@ Source0: http://mirror.cogentco.com/pub/apache/zookeeper/zookeeper-%{rel_ver}/ap
 Source1: zookeeper.service
 Source2: zoo.cfg
 Source3: log4j.properties
-Source4: java.env
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
 BuildRequires: systemd-rpm-macros
 Requires: java, nc
@@ -53,7 +52,6 @@ install -p -D -m 644 zookeeper-server/target/zookeeper-%{rel_ver}.jar %{buildroo
 install -p -D -m 644 %{S:1} %{buildroot}%{_unitdir}/%{name}.service
 install -p -D -m 644 %{S:2} %{buildroot}%{_sysconfdir}/zookeeper/zoo.cfg
 install -p -D -m 644 %{S:3} %{buildroot}%{_sysconfdir}/zookeeper/log4j.properties
-install -p -D -m 644 %{S:4} %{buildroot}%{_sysconfdir}/zookeeper/java.env
 install -p -D -m 644 conf/configuration.xsl %{buildroot}%{_sysconfdir}/zookeeper/configuration.xsl
 install -d %{buildroot}%{_sbindir}
 install -d %{buildroot}%{_bindir}
@@ -91,6 +89,8 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Tue Jun 25 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+- remove obsolete files
 * Tue Jun 25 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.5-1
 - migrate to zookeeper 3.5.5
 * Mon May 27 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.4.14-2
