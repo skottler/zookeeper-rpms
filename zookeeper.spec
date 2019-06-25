@@ -11,13 +11,12 @@ URL: http://hadoop.apache.org/zookeeper/
 BuildArch: noarch
 Source0: http://mirror.cogentco.com/pub/apache/zookeeper/zookeeper-%{rel_ver}/apache-zookeeper-%{rel_ver}.tar.gz
 Source1: zookeeper.service
-Source2: zookeeper.logrotate
-Source3: zoo.cfg
-Source4: log4j.properties
-Source5: java.env
+Source2: zoo.cfg
+Source3: log4j.properties
+Source4: java.env
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
 BuildRequires: systemd-rpm-macros
-Requires: logrotate, java, nc
+Requires: java, nc
 AutoReqProv: no
 
 %description
@@ -52,10 +51,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/zookeeper
 cp -a zookeeper-server/target/lib %{buildroot}%{_zookeeper_noarch_libdir}
 install -p -D -m 644 zookeeper-server/target/zookeeper-%{rel_ver}.jar %{buildroot}%{_zookeeper_noarch_libdir}/lib/zookeeper-%{rel_ver}.jar
 install -p -D -m 644 %{S:1} %{buildroot}%{_unitdir}/%{name}.service
-install -p -D -m 644 %{S:2} %{buildroot}%{_sysconfdir}/logrotate.d/zookeeper
-install -p -D -m 644 %{S:3} %{buildroot}%{_sysconfdir}/zookeeper/zoo.cfg
-install -p -D -m 644 %{S:4} %{buildroot}%{_sysconfdir}/zookeeper/log4j.properties
-install -p -D -m 644 %{S:5} %{buildroot}%{_sysconfdir}/zookeeper/java.env
+install -p -D -m 644 %{S:2} %{buildroot}%{_sysconfdir}/zookeeper/zoo.cfg
+install -p -D -m 644 %{S:3} %{buildroot}%{_sysconfdir}/zookeeper/log4j.properties
+install -p -D -m 644 %{S:4} %{buildroot}%{_sysconfdir}/zookeeper/java.env
 install -p -D -m 644 conf/configuration.xsl %{buildroot}%{_sysconfdir}/zookeeper/configuration.xsl
 install -d %{buildroot}%{_sbindir}
 install -d %{buildroot}%{_bindir}
@@ -76,7 +74,6 @@ rm -rf %{buildroot}
 %dir %attr(0750, zookeeper, zookeeper) %{_localstatedir}/log/zookeeper
 %{_zookeeper_noarch_libdir}
 %{_unitdir}/%{name}.service
-%config(noreplace) %{_sysconfdir}/logrotate.d/zookeeper
 %config(noreplace) %{_sysconfdir}/zookeeper
 
 %pre
