@@ -1,7 +1,6 @@
 # Overview
 
 This repository contains everything needed to build RPM's for zookeeper-server.
-
 The spec has been tested on EL7 with the EPEL repo enabled and Fedora 30.
 
 ## Prepare
@@ -57,6 +56,10 @@ systemctl status zookeeper
    Active: inactive (dead)
      Docs: http://zookeeper.apache.org
 ```
+
+## Acknowledgement
+
+This work is based on [skottler/zookeeper-rpms](https://github.com/skottler/zookeeper-rpms) project.
 
 ## License
 
