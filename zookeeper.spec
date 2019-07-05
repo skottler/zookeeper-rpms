@@ -14,7 +14,6 @@ Source1: zookeeper.service
 Source2: zoo.cfg
 Source3: log4j.properties
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
-BuildRequires: systemd-rpm-macros
 Requires: java, nc
 AutoReqProv: no
 
@@ -89,6 +88,8 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Fri Jul 5 2019 Sam Kottler <skottler@github.cok>
+- Remove systemd-rpm-macros from BuildRequires
 * Tue Jun 25 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
 - remove obsolete files
 * Tue Jun 25 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.5-1
