@@ -1,24 +1,22 @@
 %define _noarch_libdir /usr/lib
-%define rel_ver 3.4.11
+%define rel_ver 3.4.14
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
 Version: %{rel_ver}
-Release: 1
+Release: 2
 License: Apache License v2.0
 Group: Applications/Databases
 URL: http://hadoop.apache.org/zookeeper/
 Source0: http://mirror.cogentco.com/pub/apache/zookeeper/zookeeper-%{rel_ver}/zookeeper-%{rel_ver}.tar.gz
-Source1: zookeeper.init
+Source1: zookeeper.service
 Source2: zookeeper.logrotate
 Source3: zoo.cfg
 Source4: log4j.properties
 Source5: java.env
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
-BuildRequires: python-devel,gcc,make,libtool,autoconf,cppunit-devel
+BuildRequires: python-devel,gcc,make,libtool,autoconf,cppunit-devel,systemd-rpm-macros
 Requires: logrotate, java, nc
-Requires(post): chkconfig initscripts
-Requires(pre): chkconfig initscripts
 AutoReqProv: no
 
 %description
@@ -42,7 +40,7 @@ implementing coordination services from scratch.
 %setup -q -n zookeeper-%{rel_ver}
 
 %build
-pushd src/c
+pushd zookeeper-client/zookeeper-client-c
 rm -rf aclocal.m4 autom4te.cache/ config.guess config.status config.log \
     config.sub configure depcomp install-sh ltmain.sh libtool \
     Makefile Makefile.in missing stamp-h1 compile
@@ -62,8 +60,8 @@ install -p -d %{buildroot}%{_zookeeper_noarch_libdir}
 cp -a bin lib %{buildroot}%{_zookeeper_noarch_libdir}
 
 mkdir -p %{buildroot}%{_sysconfdir}/zookeeper
-install -p -D -m 644 zookeeper-%{rel_ver}.jar %{buildroot}%{_zookeeper_noarch_libdir}/zookeeper-%{rel_ver}.jar
-install -p -D -m 755 %{S:1} %{buildroot}%{_initrddir}/zookeeper
+install -p -D -m 644 zookeeper-%{rel_ver}.jar %{buildroot}%{_zookeeper_noarch_libdir}/lib/zookeeper-%{rel_ver}.jar
+install -p -D -m 644 %{S:1} %{buildroot}%{_unitdir}/%{name}.service
 install -p -D -m 644 %{S:2} %{buildroot}%{_sysconfdir}/logrotate.d/zookeeper
 install -p -D -m 644 %{S:3} %{buildroot}%{_sysconfdir}/zookeeper/zoo.cfg
 install -p -D -m 644 %{S:4} %{buildroot}%{_sysconfdir}/zookeeper/log4j.properties
@@ -76,7 +74,7 @@ install -d %{buildroot}%{_localstatedir}/lib/zookeeper
 install -d %{buildroot}%{_localstatedir}/lib/zookeeper/data
 install -p -d -D -m 0755 %{buildroot}%{_datadir}/zookeeper
 
-%{makeinstall} -C src/c
+%{makeinstall} -C zookeeper-client/zookeeper-client-c
 
 %clean
 rm -rf %{buildroot}
@@ -84,12 +82,12 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc LICENSE.txt NOTICE.txt README.md
-%doc docs recipes
+%doc zookeeper-docs zookeeper-recipes
 %dir %attr(0750, zookeeper, zookeeper) %{_localstatedir}/lib/zookeeper
 %dir %attr(0750, zookeeper, zookeeper) %{_localstatedir}/lib/zookeeper/data
 %dir %attr(0750, zookeeper, zookeeper) %{_localstatedir}/log/zookeeper
 %{_zookeeper_noarch_libdir}
-%{_initrddir}/zookeeper
+%{_unitdir}/%{name}.service
 %config(noreplace) %{_sysconfdir}/logrotate.d/zookeeper
 %config(noreplace) %{_sysconfdir}/zookeeper
 %{_bindir}/cli_mt
@@ -116,7 +114,7 @@ Sync and Async APIs can be mixed and matched within the same application.
 
 %files -n libzookeeper
 %defattr(-, root, root, -)
-%doc src/c/README src/c/LICENSE
+%doc zookeeper-client/zookeeper-client-c/README zookeeper-client/zookeeper-client-c/LICENSE
 %{_libdir}/libzookeeper_mt.so.*
 %{_libdir}/libzookeeper_st.so.*
 
@@ -144,20 +142,19 @@ getent passwd zookeeper >/dev/null || useradd -r -g zookeeper -d / -s /sbin/nolo
 exit 0
 
 %post
-/sbin/chkconfig --add zookeeper
+%systemd_post %{name}.service
 
 %preun
-if [ $1 = 0 ] ; then
-    /sbin/service zookeeper stop >/dev/null 2>&1
-    /sbin/chkconfig --del zookeeper
-fi
+%systemd_preun %{name}.service
 
 %postun
-if [ "$1" -ge "1" ] ; then
-    /sbin/service zookeeper condrestart >/dev/null 2>&1 || :
-fi
+%systemd_postun_with_restart %{name}.service
 
 %changelog
+* Mon May 27 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.4.14-2
+- Migrate to systemd
+* Thu May 02 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.4.14-1
+- Bump version to 3.4.14
 * Mon Apr 17 2017 itxx00 <itxx00@gmail.com> - 3.4.10-1
 - Bump version to 3.4.10
 * Mon Mar 13 2017 itxx00 <itxx00@gmail.com> - 3.4.9-1
