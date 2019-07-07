@@ -4,7 +4,7 @@
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
 Version: %{rel_ver}
-Release: 1
+Release: 1%{?dist}
 License: Apache License v2.0
 Group: Applications/Databases
 URL: http://hadoop.apache.org/zookeeper/
