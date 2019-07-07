@@ -13,6 +13,7 @@ Source0: http://mirror.cogentco.com/pub/apache/zookeeper/zookeeper-%{rel_ver}/ap
 Source1: zookeeper.service
 Source2: zoo.cfg
 Source3: log4j.properties
+Source4: zookeeper.sysconfig
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
 Requires: java, nc
 AutoReqProv: no
@@ -51,6 +52,7 @@ install -p -D -m 644 zookeeper-server/target/zookeeper-%{rel_ver}.jar %{buildroo
 install -p -D -m 644 %{S:1} %{buildroot}%{_unitdir}/%{name}.service
 install -p -D -m 644 %{S:2} %{buildroot}%{_sysconfdir}/zookeeper/zoo.cfg
 install -p -D -m 644 %{S:3} %{buildroot}%{_sysconfdir}/zookeeper/log4j.properties
+install -p -D -m 644 %{S:4} %{buildroot}%{_sysconfdir}/sysconfig/zookeeper
 install -p -D -m 644 conf/configuration.xsl %{buildroot}%{_sysconfdir}/zookeeper/configuration.xsl
 install -d %{buildroot}%{_sbindir}
 install -d %{buildroot}%{_bindir}
@@ -72,6 +74,7 @@ rm -rf %{buildroot}
 %{_zookeeper_noarch_libdir}
 %{_unitdir}/%{name}.service
 %config(noreplace) %{_sysconfdir}/zookeeper
+%config(noreplace) %{_sysconfdir}/sysconfig/zookeeper
 
 %pre
 getent group zookeeper >/dev/null || groupadd -r zookeeper
