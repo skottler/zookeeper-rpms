@@ -7,15 +7,16 @@ Version: %{rel_ver}
 Release: 1%{?dist}
 License: Apache License v2.0
 Group: Applications/Databases
-URL: http://hadoop.apache.org/zookeeper/
+URL: https://www.apache.org/dist/zookeeper/
 BuildArch: noarch
-Source0: http://mirror.cogentco.com/pub/apache/zookeeper/zookeeper-%{rel_ver}/apache-zookeeper-%{rel_ver}.tar.gz
+Source0: https://www.apache.org/dist/zookeeper/zookeeper-%{rel_ver}/apache-zookeeper-%{rel_ver}.tar.gz
 Source1: zookeeper.service
 Source2: zoo.cfg
 Source3: log4j.properties
 Source4: zookeeper.sysconfig
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
-Requires: java, nc
+BuildRequires: maven,hostname,systemd
+Requires: java,nc,systemd
 AutoReqProv: no
 
 %description
@@ -91,6 +92,8 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Thu Jul 11 2019 Anton Samets <sharewax@gmail.com>
+- add needed Requeries for correct rpm building and fix URL and Source paths
 * Fri Jul 5 2019 Sam Kottler <skottler@github.cok>
 - Remove systemd-rpm-macros from BuildRequires
 * Tue Jun 25 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
