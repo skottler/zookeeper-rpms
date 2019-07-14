@@ -15,8 +15,8 @@ Source2: zoo.cfg
 Source3: log4j.properties
 Source4: zookeeper.sysconfig
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
-BuildRequires: maven,hostname,systemd
-Requires: java,nc,systemd
+BuildRequires: python-devel,gcc,make,libtool,autoconf,cppunit-devel,maven,hostname,systemd
+Requires: java, nc, systemd
 AutoReqProv: no
 
 %description
@@ -94,7 +94,7 @@ exit 0
 %changelog
 * Thu Jul 11 2019 Anton Samets <sharewax@gmail.com>
 - add needed Requeries for correct rpm building and fix URL and Source paths
-* Fri Jul 5 2019 Sam Kottler <skottler@github.cok>
+* Fri Jul 5 2019 Sam Kottler <skottler@github.com>
 - Remove systemd-rpm-macros from BuildRequires
 * Tue Jun 25 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
 - remove obsolete files
