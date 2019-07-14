@@ -1,22 +1,22 @@
 %define _noarch_libdir /usr/lib
-%define rel_ver 3.4.14
+%define rel_ver 3.5.5
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
 Version: %{rel_ver}
-Release: 2
+Release: 1%{?dist}
 License: Apache License v2.0
 Group: Applications/Databases
-URL: http://hadoop.apache.org/zookeeper/
-Source0: http://mirror.cogentco.com/pub/apache/zookeeper/zookeeper-%{rel_ver}/zookeeper-%{rel_ver}.tar.gz
+URL: https://www.apache.org/dist/zookeeper/
+BuildArch: noarch
+Source0: https://www.apache.org/dist/zookeeper/zookeeper-%{rel_ver}/apache-zookeeper-%{rel_ver}.tar.gz
 Source1: zookeeper.service
-Source2: zookeeper.logrotate
-Source3: zoo.cfg
-Source4: log4j.properties
-Source5: java.env
+Source2: zoo.cfg
+Source3: log4j.properties
+Source4: zookeeper.sysconfig
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
-BuildRequires: python-devel,gcc,make,libtool,autoconf,cppunit-devel
-Requires: logrotate, java, nc
+BuildRequires: python-devel,gcc,make,libtool,autoconf,cppunit-devel,maven,hostname,systemd
+Requires: java, nc, systemd
 AutoReqProv: no
 
 %description
@@ -37,35 +37,23 @@ implementing coordination services from scratch.
 %define _maindir %{buildroot}%{_zookeeper_noarch_libdir}
 
 %prep
-%setup -q -n zookeeper-%{rel_ver}
+%setup -q -n apache-zookeeper-%{rel_ver}
 
 %build
-pushd zookeeper-client/zookeeper-client-c
-rm -rf aclocal.m4 autom4te.cache/ config.guess config.status config.log \
-    config.sub configure depcomp install-sh ltmain.sh libtool \
-    Makefile Makefile.in missing stamp-h1 compile
-autoheader
-libtoolize --force
-aclocal
-automake -a
-autoconf
-autoreconf
-%configure
-%{__make} %{?_smp_mflags}
-popd
+mvn -DskipTests package
 
 %install
 rm -rf %{buildroot}
 install -p -d %{buildroot}%{_zookeeper_noarch_libdir}
-cp -a bin lib %{buildroot}%{_zookeeper_noarch_libdir}
+cp -a bin %{buildroot}%{_zookeeper_noarch_libdir}
 
 mkdir -p %{buildroot}%{_sysconfdir}/zookeeper
-install -p -D -m 644 zookeeper-%{rel_ver}.jar %{buildroot}%{_zookeeper_noarch_libdir}/lib/zookeeper-%{rel_ver}.jar
+cp -a zookeeper-server/target/lib %{buildroot}%{_zookeeper_noarch_libdir}
+install -p -D -m 644 zookeeper-server/target/zookeeper-%{rel_ver}.jar %{buildroot}%{_zookeeper_noarch_libdir}/lib/zookeeper-%{rel_ver}.jar
 install -p -D -m 644 %{S:1} %{buildroot}%{_unitdir}/%{name}.service
-install -p -D -m 644 %{S:2} %{buildroot}%{_sysconfdir}/logrotate.d/zookeeper
-install -p -D -m 644 %{S:3} %{buildroot}%{_sysconfdir}/zookeeper/zoo.cfg
-install -p -D -m 644 %{S:4} %{buildroot}%{_sysconfdir}/zookeeper/log4j.properties
-install -p -D -m 644 %{S:5} %{buildroot}%{_sysconfdir}/zookeeper/java.env
+install -p -D -m 644 %{S:2} %{buildroot}%{_sysconfdir}/zookeeper/zoo.cfg
+install -p -D -m 644 %{S:3} %{buildroot}%{_sysconfdir}/zookeeper/log4j.properties
+install -p -D -m 644 %{S:4} %{buildroot}%{_sysconfdir}/sysconfig/zookeeper
 install -p -D -m 644 conf/configuration.xsl %{buildroot}%{_sysconfdir}/zookeeper/configuration.xsl
 install -d %{buildroot}%{_sbindir}
 install -d %{buildroot}%{_bindir}
@@ -73,8 +61,6 @@ install -d %{buildroot}%{_localstatedir}/log/zookeeper
 install -d %{buildroot}%{_localstatedir}/lib/zookeeper
 install -d %{buildroot}%{_localstatedir}/lib/zookeeper/data
 install -p -d -D -m 0755 %{buildroot}%{_datadir}/zookeeper
-
-%{makeinstall} -C zookeeper-client/zookeeper-client-c
 
 %clean
 rm -rf %{buildroot}
@@ -88,53 +74,8 @@ rm -rf %{buildroot}
 %dir %attr(0750, zookeeper, zookeeper) %{_localstatedir}/log/zookeeper
 %{_zookeeper_noarch_libdir}
 %{_unitdir}/%{name}.service
-%config(noreplace) %{_sysconfdir}/logrotate.d/zookeeper
 %config(noreplace) %{_sysconfdir}/zookeeper
-%{_bindir}/cli_mt
-%{_bindir}/cli_st
-%{_bindir}/load_gen
-
-# ------------------------------ libzookeeper ------------------------------
-
-%package -n libzookeeper
-Summary: C client interface to zookeeper server
-Group: Development/Libraries
-BuildRequires: gcc
-
-%description -n libzookeeper
-The client supports two types of APIs -- synchronous and asynchronous.
-
-Asynchronous API provides non-blocking operations with completion callbacks and
-relies on the application to implement event multiplexing on its behalf.
-
-On the other hand, Synchronous API provides a blocking flavor of
-zookeeper operations and runs its own event loop in a separate thread.
-
-Sync and Async APIs can be mixed and matched within the same application.
-
-%files -n libzookeeper
-%defattr(-, root, root, -)
-%doc zookeeper-client/zookeeper-client-c/README zookeeper-client/zookeeper-client-c/LICENSE
-%{_libdir}/libzookeeper_mt.so.*
-%{_libdir}/libzookeeper_st.so.*
-
-# ------------------------------ libzookeeper-devel ------------------------------
-
-%package -n libzookeeper-devel
-Summary: Headers and static libraries for libzookeeper
-Group: Development/Libraries
-Requires: gcc
-
-%description -n libzookeeper-devel
-This package contains the libraries and header files needed for
-developing with libzookeeper.
-
-%files -n libzookeeper-devel
-%defattr(-, root, root, -)
-%{_includedir}
-%{_libdir}/*.a
-%{_libdir}/*.la
-%{_libdir}/*.so
+%config(noreplace) %{_sysconfdir}/sysconfig/zookeeper
 
 %pre
 getent group zookeeper >/dev/null || groupadd -r zookeeper
@@ -151,6 +92,14 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Thu Jul 11 2019 Anton Samets <sharewax@gmail.com>
+- add needed Requeries for correct rpm building and fix URL and Source paths
+* Fri Jul 5 2019 Sam Kottler <skottler@github.com>
+- Remove systemd-rpm-macros from BuildRequires
+* Tue Jun 25 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+- remove obsolete files
+* Tue Jun 25 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.5-1
+- migrate to zookeeper 3.5.5
 * Mon May 27 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.4.14-2
 - Migrate to systemd
 * Thu May 02 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.4.14-1
