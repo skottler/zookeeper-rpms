@@ -16,7 +16,7 @@ Source3: log4j.properties
 Source4: zookeeper.sysconfig
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
 BuildRequires: python-devel,gcc,make,libtool,autoconf,cppunit-devel,maven,hostname,systemd
-Requires: java, nc, systemd
+Requires: java,nc,systemd
 AutoReqProv: no
 
 %description
