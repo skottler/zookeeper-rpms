@@ -57,10 +57,6 @@ systemctl status zookeeper
      Docs: http://zookeeper.apache.org
 ```
 
-## Acknowledgement
-
-This work is based on [skottler/zookeeper-rpms](https://github.com/skottler/zookeeper-rpms) project.
-
 ## License
 
 All files in this repository are licensed under the Apache 2 license. Any
