@@ -1,10 +1,11 @@
 %define _noarch_libdir /usr/lib
 %define rel_ver 3.5.5
+%define pkg_ver 3
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
 Version: %{rel_ver}
-Release: 2%{?dist}
+Release: %{pkg_ver}%{?dist}
 License: Apache License v2.0
 Group: Applications/Databases
 URL: https://www.apache.org/dist/zookeeper/
@@ -92,6 +93,9 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Fri Oct 04 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.5-3
+- fix loading of systemd environment file
+- introduce variable to control package version
 * Thu Jul 11 2019 Anton Samets <sharewax@gmail.com>
 - add needed Requeries for correct rpm building and fix URL and Source paths
 * Fri Jul 5 2019 Sam Kottler <skottler@github.com>
