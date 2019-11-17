@@ -1,6 +1,6 @@
 %define _noarch_libdir /usr/lib
-%define rel_ver 3.5.5
-%define pkg_ver 3
+%define rel_ver 3.5.6
+%define pkg_ver 1
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
@@ -93,6 +93,8 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Sun Nov 17 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.6-1
+- Bump version to 3.5.6
 * Fri Oct 04 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.5-3
 - fix loading of systemd environment file
 - introduce variable to control package version
