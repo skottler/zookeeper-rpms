@@ -22,6 +22,7 @@ StandardOutput=journal
 StandardError=journal
 SuccessExitStatus=130
 KillSignal=SIGINT
+ProtectSystem=full
 
 [Install]
 WantedBy=multi-user.target
