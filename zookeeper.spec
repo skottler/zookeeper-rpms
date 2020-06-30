@@ -1,6 +1,6 @@
 %define _noarch_libdir /usr/lib
 %define rel_ver 3.5.8
-%define pkg_ver 1
+%define pkg_ver 2
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
@@ -93,6 +93,8 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Tue Jun 30 2020 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.8-2
+- restrict access to /usr, /etc, /boot directories
 * Wed May 27 2020 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.8-1
 - Bump version to zookeeper version to 3.5.8
 * Thu Mar 5 2020 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.7-1
