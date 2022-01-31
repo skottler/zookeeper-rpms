@@ -1,6 +1,6 @@
 %define _noarch_libdir /usr/lib
-%define rel_ver 3.5.8
-%define pkg_ver 3
+%define rel_ver 3.5.9
+%define pkg_ver 1
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
@@ -96,6 +96,8 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Mon Jan 31 2022 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+- bupm zookeeper to version to 3.5.9
 * Fri Jan 28 2022 Tigran Mkrtchyan <tigran.mkrthyan@desy.de> - 3.5.8-3
 - apply qick fix for CVE-2022-23307
 * Tue Jun 30 2020 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.8-2
