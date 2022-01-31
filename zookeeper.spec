@@ -1,6 +1,6 @@
 %define _noarch_libdir /usr/lib
-%define rel_ver 3.5.5
-%define pkg_ver 3
+%define rel_ver 3.5.9
+%define pkg_ver 1
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
@@ -16,8 +16,8 @@ Source2: zoo.cfg
 Source3: log4j.properties
 Source4: zookeeper.sysconfig
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
-BuildRequires: python-devel,gcc,make,libtool,autoconf,cppunit-devel,maven,hostname,systemd
-Requires: java,nc,systemd
+BuildRequires: python-devel,gcc,make,libtool,autoconf,cppunit-devel,maven,hostname,systemd,zip
+Requires: java-11-headless,nc,systemd
 AutoReqProv: no
 
 %description
@@ -49,6 +49,9 @@ install -p -d %{buildroot}%{_zookeeper_noarch_libdir}
 cp -a bin %{buildroot}%{_zookeeper_noarch_libdir}
 
 mkdir -p %{buildroot}%{_sysconfdir}/zookeeper
+# quick fix for CVE-2022-23307
+echo "Appliying CVE-2022-23307 fix for log4j-1.2"
+zip -q -d zookeeper-server/target/lib/log4j*.jar  org/apache/log4j/chainsaw/*
 cp -a zookeeper-server/target/lib %{buildroot}%{_zookeeper_noarch_libdir}
 install -p -D -m 644 zookeeper-server/target/zookeeper-%{rel_ver}.jar %{buildroot}%{_zookeeper_noarch_libdir}/lib/zookeeper-%{rel_ver}.jar
 install -p -D -m 644 %{S:1} %{buildroot}%{_unitdir}/%{name}.service
@@ -93,6 +96,18 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Mon Jan 31 2022 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+- bupm zookeeper to version to 3.5.9
+* Fri Jan 28 2022 Tigran Mkrtchyan <tigran.mkrthyan@desy.de> - 3.5.8-3
+- apply qick fix for CVE-2022-23307
+* Tue Jun 30 2020 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.8-2
+- restrict access to /usr, /etc, /boot directories
+* Wed May 27 2020 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.8-1
+- Bump version to zookeeper version to 3.5.8
+* Thu Mar 5 2020 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.7-1
+- Bump version to zookeeper version to 3.5.7
+* Sun Nov 17 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.6-1
+- Bump version to 3.5.6
 * Fri Oct 04 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.5-3
 - fix loading of systemd environment file
 - introduce variable to control package version
